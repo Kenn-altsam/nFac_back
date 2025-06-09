@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from .. import models, schemas, database
+from src import models, database  # ✅ absolute import
+from src.auth import get_current_user, create_access_token  # ✅ your question
+from src.schemas.users import UserCreate, UserRead, UserUpdate  # ✅ user schemas
+from src.schemas.auth import LoginRequest, TokenResponse  # ✅ for login schema
 from passlib.context import CryptContext
-from ..auth import create_access_token
-from ..schemas.auth import LoginRequest, TokenResponse
-from ..auth import get_current_user
 
 
 router = APIRouter()
@@ -33,12 +33,12 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
     access_token = create_access_token(data={"sub": user.email})
     return {"access_token": access_token, "token_type": "bearer"}
 
-@router.get("/me", response_model=schemas.users.UserRead)
+@router.get("/me", response_model=UserRead)
 def get_me(current_user: models.users.User = Depends(get_current_user)):
     return current_user
 
-@router.post("/register", response_model=schemas.users.UserRead)
-def register(user: schemas.users.UserCreate, db: Session = Depends(get_db)):
+@router.post("/register", response_model=UserRead)
+def register(user: UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(models.users.User).filter(models.users.User.email == user.email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -53,3 +53,37 @@ def register(user: schemas.users.UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+# PUT http://127.0.0.1:8000/users/1
+# {
+#   "username": "newname",
+#   "email": "newemail@example.com",
+#   "password": "newpass123"
+# }
+@router.put("/users/{user_id}", response_model=UserRead)
+def update_user(user_id: int, updates: UserUpdate, db: Session = Depends(get_db)):
+    user = db.query(models.users.User).filter(models.users.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if updates.username:
+        user.username = updates.username
+    if updates.email:
+        user.email = updates.email
+    if updates.password:
+        user.hashed_password = hash_password(updates.password)
+
+    db.commit()
+    db.refresh(user)
+    return user
+
+# DELETE http://127.0.0.1:8000/users/1
+@router.delete("/users/{user_id}")
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(models.users.User).filter(models.users.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    db.delete(user)
+    db.commit()
+    return {"detail": f"User {user_id} deleted"}
