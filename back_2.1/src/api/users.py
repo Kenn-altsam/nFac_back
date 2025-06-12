@@ -116,4 +116,8 @@ def create_task(
     db.refresh(db_task)
     return db_task
 
+@router.get("/ping")
+def ping():
+    return {"message": "pong"}
+
 
