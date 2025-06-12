@@ -17,3 +17,20 @@ jobs:
         run: |
           docker compose down
           docker compose up -d --build
+
+      - name: Wait for FastAPI to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -s http://localhost:8000/docs; then
+              echo "FastAPI is up!"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "FastAPI did not start in time" >&2
+          exit 1
+
+      - name: Print Celery Worker Logs (on failure)
+        if: failure()
+        run: |
+          docker compose logs celery_worker

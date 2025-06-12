@@ -1,4 +1,5 @@
 from celery import Celery
+from src import tasks
 
 celery_app = Celery(
     "nfac",
