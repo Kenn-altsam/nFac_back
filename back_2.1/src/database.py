@@ -7,8 +7,7 @@ import os
 
 load_dotenv()
 
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
-
+SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:postgres@db:5432/nFac_back"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

@@ -18,8 +18,34 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - redis
     # env_file:
     #   - .env  
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/nFac_back
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  celery_worker:
+    build: .
+    command: celery -A src.celery_app worker --loglevel=info
+    working_dir: /src
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/nFac_back
+
+  celery_beat:
+    build: .
+    command: celery -A src.celery_app beat --loglevel=info
+    working_dir: /src
+    depends_on:
+      - db
+      - redis
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/nFac_back
 

@@ -8,6 +8,7 @@ from passlib.context import CryptContext
 from src.models.task import Task
 from src.schemas.task import TaskCreate, TaskRead
 from src.models import Base
+from src.database import get_db
 
 router = APIRouter()
 
@@ -15,13 +16,6 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
-
-def get_db():
-    db = database.SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
