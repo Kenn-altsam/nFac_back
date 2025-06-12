@@ -39,7 +39,7 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
 def get_me(current_user: models.users.User = Depends(get_current_user)):
     return current_user
 
-@router.post("/register", response_model=UserCreate)
+@router.post("/register", response_model=UserRead)
 def register(user: UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(models.users.User).filter(models.users.User.email == user.email).first()
     if existing_user:
