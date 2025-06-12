@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   db:
     image: postgres:15
@@ -10,6 +12,11 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
   web:
     build: .
     command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
@@ -19,15 +26,8 @@ services:
     depends_on:
       - db
       - redis
-    # env_file:
-    #   - .env  
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/nFac_back
-
-  redis:
-    image: redis:7
-    ports:
-      - "6379:6379"
 
   celery_worker:
     build: .
@@ -50,4 +50,4 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/nFac_back
 
 volumes:
-  pgdata:
+  pgdata: 

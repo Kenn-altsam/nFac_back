@@ -1,16 +1,11 @@
 from celery import Celery
-from src import tasks
 
 celery_app = Celery(
     "nfac",
     broker="redis://redis:6379/0",
-    backend="redis://redis:6379/0",  # Можно убрать backend, если не нужен результат
+    backend="redis://redis:6379/0",
 )
-
 celery_app.conf.timezone = "UTC"
-celery_app.conf.beat_schedule = {
-    "print-every-10-seconds": {
-        "task": "src.tasks.print_hello",
-        "schedule": 10.0,  # каждые 10 секунд
-    },
-}
+
+# Autodiscover tasks in the 'src' package
+celery_app.autodiscover_tasks(['src'])

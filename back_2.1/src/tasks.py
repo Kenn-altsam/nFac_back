@@ -1,6 +1,6 @@
-from .celery_app import celery_app
+from celery import shared_task
 
-@celery_app.task
+@shared_task
 def print_hello():
     print("Hello from Celery!")
     return "Hello!"
