@@ -42,5 +42,5 @@ jobs:
 
     - name: Run tests
       run: |
-        cd back
+        cd back_2.1
         pytest
