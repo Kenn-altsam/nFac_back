@@ -1,11 +1,11 @@
-from src.assistant.openai_client import OpenAIAgent
-from src.assistant.gemini_client import GeminiAgent
+from assistant.openai_client import OpenAIAgent
+from assistant.gemini_client import GeminiAgent
 
 def run_conversation():
     agent1 = OpenAIAgent()
     agent2 = GeminiAgent()
 
-    message = "Привет, что ты думаешь об искусственном интеллекте?"
+    message = input("Enter your message: ")
     print(f"User: {message}")
 
     for i in range(3):
@@ -16,3 +16,6 @@ def run_conversation():
         print(f"Gemini: {reply2}")
 
         message = reply2
+
+if __name__ == "__main__":
+    run_conversation()
