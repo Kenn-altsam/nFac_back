@@ -1,5 +1,8 @@
 from assistant.openai_client import OpenAIAgent
 from assistant.gemini_client import GeminiAgent
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def run_conversation():
     agent1 = OpenAIAgent()
