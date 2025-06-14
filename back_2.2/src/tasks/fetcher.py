@@ -1,11 +1,11 @@
-from src.celery_app import celeryy  # ✅ правильный импорт
+from src.celery_app import celery
 import requests
 from datetime import datetime
 from src.db import SessionLocal
 from src.models import AILog
 
 
-@celeryy.task
+@celery.task
 def fetch_daily_data():
     try:
         print("📦 Fetching products from fakestoreapi.com ...")
