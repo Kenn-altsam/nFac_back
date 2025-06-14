@@ -1,6 +1,6 @@
 from .base import BaseAgent
 import os
-import google.generativeai as genai
+from google import genai
 
 class GeminiAgent(BaseAgent):
     def __init__(self):
