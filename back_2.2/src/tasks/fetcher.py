@@ -1,4 +1,4 @@
-from celery import celery
+from src.celery_app import celery
 import requests
 from datetime import datetime
 from src.db import SessionLocal
