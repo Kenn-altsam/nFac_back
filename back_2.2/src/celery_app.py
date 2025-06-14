@@ -1,4 +1,4 @@
-from celery_app import Celery
+from src.celery_app import Celery
 import os
 
 celery = Celery(
