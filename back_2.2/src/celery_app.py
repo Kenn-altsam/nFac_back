@@ -9,7 +9,6 @@ celery = Celery(
 
 celery.autodiscover_tasks(['src.tasks'])
 
-# ⏰ Периодическая задача (если используешь beat)
 from celery.schedules import crontab
 celery.conf.beat_schedule = {
     "daily-fetch": {
