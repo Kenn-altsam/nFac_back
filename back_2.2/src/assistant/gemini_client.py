@@ -1,7 +1,7 @@
 from .base import BaseAgent
 import os
 import google.generativeai as genai
-from src.config import GEMINI_API_KEY
+from config import GEMINI_API_KEY
 
 class GeminiAgent(BaseAgent):
     def __init__(self):
