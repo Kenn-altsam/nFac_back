@@ -8,11 +8,4 @@ celery = Celery(
 )
 
 celery.autodiscover_tasks(['src.tasks'])
-
-from celery.schedules import crontab
-celery.conf.beat_schedule = {
-    "daily-fetch": {
-        "task": "src.tasks.fetcher.fetch_daily_data",
-        "schedule": crontab(hour=9, minute=0),
-    },
-}
+celery.config_from_object('src.celeryconfig')
