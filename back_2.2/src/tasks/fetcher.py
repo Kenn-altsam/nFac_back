@@ -1,8 +1,8 @@
-from src.celery_app import celery
+from src.celery_app import celery  # ✅ правильный импорт
 import requests
 from datetime import datetime
 from src.db import SessionLocal
-from src.models import AILog  # не забудь эту модель создать в models/__init__.py
+from src.models import AILog
 
 
 @celery.task
@@ -13,15 +13,12 @@ def fetch_daily_data():
         products = response.json()
 
         db = SessionLocal()
-
-        # Пример: сохраним как один лог
         log = AILog(
             agent_name="fakestore_scraper",
             input_text="https://fakestoreapi.com/products",
             output_text=str(products),
             timestamp=datetime.utcnow()
         )
-
         db.add(log)
         db.commit()
         db.close()
